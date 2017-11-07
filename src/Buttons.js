@@ -1,33 +1,57 @@
-import React, {Component} from 'react';
+import React, {Component, Button} from 'react';
 import './App.css';
-import {Row, Col, CardPanel} from 'react-materialize'
 
-
-class Button extends Component {
+class Buttons extends Component {
 
     constructor(props) {
         super(props);
         this.test = this.test.bind(this);
         this.buttonLabel = this.props.buttonLabel;
-        this.props = {numerical: false};
+        this.NumericalOrNot = this.NumericalOrNot.bind(this);
+    };
+
+    static defaultProps = {
+        numerical: false
     };
 
     test() {
         this.props.onClick(this.buttonLabel);
     }
 
-    render() {
+    NumericalOrNot() {
         const numerical = this.props.numerical;
-        let button = null;
+        let numericalStyle = {
+            padding: '0.5rem',
+            width: '11rem',
+            height: '5rem',
+            margin: '0.5rem',
+            background: 'transparent',
+            color: 'white',
+            border: '2px solid white'
+        };
+        let nonNumericalStyle = {
+            padding: '1rem',
+            width: '11rem',
+            height: '5rem',
+            margin: '0.5rem',
+            background: 'orange',
+            color: 'white',
+            border: '2px solid white'
+        };
         if (numerical) {
-            button = <CardPanel className=' hoverable grey lighten-1 ' onClick={this.test}
-                                id={this.buttonLabel}>{this.buttonLabel}</CardPanel>;
+            return (<button style={numericalStyle}
+                            onClick={this.test}
+                            id={this.buttonLabel}>{this.buttonLabel}</button>)
         } else {
-            button = <CardPanel className=' hoverable orange' onClick={this.test}
-                                id={this.buttonLabel}>{this.buttonLabel}</CardPanel>;
+            return (<button style={nonNumericalStyle} onClick={this.test}
+                            id={this.buttonLabel}>{this.buttonLabel}</button>)
         }
-        return <h1 numerical={numerical}>{button} </h1>;
+    }
+
+    render() {
+
+        return this.NumericalOrNot();
     }
 }
 
-export default Button;
+export default Buttons;

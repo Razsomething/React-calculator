@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
-import Button from './Buttons';
-import {Row, Col, CardPanel, Card, Navbar} from 'react-materialize'
+import Buttons from './Buttons';
+import {Row, Col, CardPanel} from 'react-materialize'
 
 class App extends Component {
 
@@ -15,6 +15,7 @@ class App extends Component {
         this.changeSign = this.changeSign.bind(this);
         this.divide = this.divide.bind(this);
         this.multiply = this.multiply.bind(this);
+        this.deleteLastInput=this.deleteLastInput.bind(this);
         this.state = {
             currentValue: '',
             previousValue: 0,
@@ -28,42 +29,41 @@ class App extends Component {
         this.setState({currentValue: newString});
     }
 
+    deleteLastInput(label) {
+        let newString = this.state.currentValue.substring(0,this.state.currentValue.length-1);
+        this.setState({currentValue: newString});
+    }
+
     calculate() {
         let currentNumber = parseFloat(this.state.currentValue);
+        let computedPreviousValue;
         if (this.state.currentValue !== '') {
             if (this.state.operation.length === 0) {
-                this.setState({
-                    previousValue: currentNumber,
-                    currentValue: ''
-                })
+                computedPreviousValue = currentNumber;
             } else if (this.state.operation === '+') {
                 let total = currentNumber + this.state.previousValue;
-                this.setState({
-                    previousValue: total,
-                    currentValue: ''
-                })
+                computedPreviousValue = total;
             }
             else if (this.state.operation === '-') {
                 let total = this.state.previousValue - currentNumber;
-                this.setState({
-                    previousValue: total,
-                    currentValue: ''
-                })
+                computedPreviousValue = total;
             }
             else if (this.state.operation === '÷') {
                 let total = this.state.previousValue / currentNumber;
-                this.setState({
-                    previousValue: total.toFixed(2),
-                    currentValue: ''
-                })
+
+                computedPreviousValue = total.toFixed(2);
+
             }
             else if (this.state.operation === 'X') {
                 let total = this.state.previousValue * currentNumber;
-                this.setState({
-                    previousValue: total.toFixed(2),
-                    currentValue: ''
-                })
+                computedPreviousValue = total.toFixed(2);
+
             }
+
+            this.setState({
+                previousValue: computedPreviousValue,
+                currentValue: ''
+            })
         }
     }
 
@@ -92,15 +92,9 @@ class App extends Component {
 
     changeSign() {
         let current = this.state.currentValue;
-        if (current > 0) {
-            this.setState({
-                currentValue: -current
-            })
-        } else if (current < 0) {
-            this.setState({
-                currentValue: Math.abs(current)
-            })
-        }
+        this.setState({
+            currentValue: -current
+        })
     }
 
     divide() {
@@ -119,93 +113,101 @@ class App extends Component {
 
 
     render() {
-        let text = null;
-        if (this.state.currentValue === '') {
-            text = <h1><CardPanel className='grey white-text  z-depth-5 right-align'>{this.state.previousValue}</CardPanel></h1>
-        } else {
-            text = <h1><CardPanel className='grey white-text  z-depth-5 right-align'>{this.state.currentValue}</CardPanel></h1>
-        }
+        const {currentValue, previousValue} = this.state;
+        let text = <CardPanel className='grey white-text  z-depth-5 right-align'>
+            <h2>{currentValue === '' ? previousValue : currentValue}</h2></CardPanel>;
+        let colStyle = {
+            width: '11rem'
+        };
+
         return (
             <div className="App">
 
                 {/*Result row*/}
                 <Row>
-                        {text}
+                    {text}
                 </Row>
+                <div className='container center'>
+                    {/*First row of buttons*/}
+                    <Row>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.clear} buttonLabel='AC'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.changeSign} buttonLabel='+/-'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.divide} buttonLabel='÷'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.multiply} buttonLabel='x'/>
+                        </Col>
+                    </Row>
 
-                {/*First row of buttons*/}
-                <Row>
-                    <Col s={3}>
-                        < Button onClick={this.clear} buttonLabel='AC'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.changeSign} buttonLabel='+/-'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.divide} buttonLabel='÷'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.multiply} buttonLabel='x'/>
-                    </Col>
-                </Row>
+                    {/*Second row of buttons*/}
+                    <Row>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='7'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='8'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='9'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.substract} buttonLabel='-'/>
+                        </Col>
+                    </Row>
 
-                {/*Second row of buttons*/}
-                <Row>
-                    <Col s={3}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='7'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='8'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='9'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.substract} buttonLabel='-'/>
-                    </Col>
-                </Row>
+                    {/*Third row of buttons*/}
+                    <Row>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='4'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='5'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='6'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.add} buttonLabel='+'/>
+                        </Col>
+                    </Row>
 
-                {/*Third row of buttons*/}
-                <Row>
-                    <Col s={3}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='4'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='5'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='6'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.add}  buttonLabel='+'/>
-                    </Col>
-                </Row>
+                    {/*Fourth row of buttons*/}
+                    <Row>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='1'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='2'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='3'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.deleteLastInput} buttonLabel='DEL'/>
 
-                {/*Fourth row of buttons*/}
-                <Row>
-                    <Col s={3}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='1'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='2'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='3'/>
-                    </Col>
-                    <Col s={3}>
-                        < Button onClick={this.calculate} buttonLabel='='/>
-                    </Col>
-                </Row>
+                        </Col>
+                    </Row>
 
-                {/*Fifth row of buttons*/}
-                <Row>
-                    <Col s={6}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='0'/>
-                    </Col>
-                    <Col s={6}>
-                        < Button onClick={this.showLabel} numerical={true} buttonLabel='.'/>
-                    </Col>
-                </Row>
+                    {/*Fifth row of buttons*/}
+                    <Row>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='0'/>
+                        </Col>
+                        <Col style={colStyle} s={3}>
+                            < Buttons onClick={this.showLabel} numerical={true} buttonLabel='.'/>
+                        </Col>
+                        <Col style={colStyle} s={6}>
+                            < Buttons onClick={this.calculate} buttonLabel='='/>
+
+                        </Col>
+
+                    </Row>
+                </div>
             </div>
         );
     }
