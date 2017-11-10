@@ -1,11 +1,11 @@
-import React, {Component, Button} from 'react';
+import React, {Component} from 'react';
 import './App.css';
 
-class Buttons extends Component {
+class Button extends Component {
 
     constructor(props) {
         super(props);
-        this.test = this.test.bind(this);
+        this.sendPropToParent = this.sendPropToParent.bind(this);
         this.buttonLabel = this.props.buttonLabel;
         this.NumericalOrNot = this.NumericalOrNot.bind(this);
     };
@@ -14,36 +14,36 @@ class Buttons extends Component {
         numerical: false
     };
 
-    test() {
+    sendPropToParent() {
         this.props.onClick(this.buttonLabel);
     }
 
     NumericalOrNot() {
         const numerical = this.props.numerical;
         let numericalStyle = {
-            padding: '0.5rem',
-            width: '11rem',
+            padding: '2rem',
+            width: '100%',
             height: '5rem',
-            margin: '0.5rem',
             background: 'transparent',
             color: 'white',
-            border: '2px solid white'
+            border: '1px solid white',
+            borderRadius: '0px'
         };
         let nonNumericalStyle = {
-            padding: '1rem',
-            width: '11rem',
+            padding: '2rem',
+            width: '100%',
             height: '5rem',
-            margin: '0.5rem',
             background: 'orange',
             color: 'white',
-            border: '2px solid white'
+            border: '1px solid white',
+            borderRadius: '0px'
         };
         if (numerical) {
             return (<button style={numericalStyle}
-                            onClick={this.test}
+                            onClick={this.sendPropToParent}
                             id={this.buttonLabel}>{this.buttonLabel}</button>)
         } else {
-            return (<button style={nonNumericalStyle} onClick={this.test}
+            return (<button style={nonNumericalStyle} onClick={this.sendPropToParent}
                             id={this.buttonLabel}>{this.buttonLabel}</button>)
         }
     }
@@ -54,4 +54,4 @@ class Buttons extends Component {
     }
 }
 
-export default Buttons;
+export default Button;
